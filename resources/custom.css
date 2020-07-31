@@ -1,0 +1,13 @@
+pre {
+  font-size: 12px;
+  padding:0.5em;
+  margin:0;
+}
+
+p {
+  font-size: 12px;
+}
+
+.chart-title {
+  font-weight: 600;
+}

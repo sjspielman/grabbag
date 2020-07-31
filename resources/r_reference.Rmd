@@ -1,0 +1,256 @@
+---
+title: "R Reference Sheets"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: cerulean
+    highlight: tango
+    orientation: rows # Determines whether level 2 headings are treated as dashboard rows or dashboard columns.
+    vertical_layout: fill
+    css: custom.css
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, fig.width = 4, fig.height =3)
+```
+
+Basic usage of R
+===================================== 
+
+Row {data-height=225}
+-----------------------------------------------------------------------
+
+### Mathematical Operators
+```{r, eval=FALSE}
+# Addition
+5 + 5   # [1] 10
+# Subtraction
+10 - 4  # [1] 6
+# Multiplication
+6 * 7   # [1] 42
+# Division
+8 / 2   # [1] 4
+
+# Exponent
+2 ^ 5   # [1] 32
+2 ** 5  # [1] 32
+```
+
+### Logical Operators
+```{r, eval=FALSE}
+# Equal to
+5 == 5     # [1] TRUE
+# Not equal to
+10 != 5    # [1] TRUE 
+# Greater (less) than 
+10 > 2     # [1] TRUE
+10 < 4     # [1] FALSE
+# Greater (less) than or equal to
+10 >= 10   # [1] TRUE
+10 <= 11   # [1] TRUE
+# Not greater (less) than 
+!(5 > 3)  # [1] FALSE
+!(10 < 4)  # [1] TRUE
+```
+
+
+### Defining variables
+```{r, eval=FALSE}
+# Define numeric variable `x` with a value of 7
+x <- 7
+# Define numeric variable `y` with a value of 7.25
+7.25 -> y
+
+# Examples of defining some character variables
+best_food  <- "ice cream"
+worst_food <- 'zucchini'
+
+# Output saved to variable.
+math_result <- 5*5
+```
+*Remember: You must __print__ the variable to see its value. Defining a variable does not show you its value automatically!*
+
+Row {data-height=500}
+-----------------------------------------------------------------------
+
+### Arrays
+
+```{r, eval=FALSE}
+# Define numeric array variable `x`, using the c() function
+x <- c(0, 1, 1, 2, 3, 5, 8, 13)
+
+# Perform operations, run functions on arrays:
+x * 2    # [1] 0  2  2  4  6  10  16  26
+x >= 5   # [1] FALSE FALSE FALSE FALSE FALSE TRUE TRUE TRUE
+log(x)   # [1] -Inf 0.00 0.00 0.69 1.09 1.60 2.07 2.56
+
+# Define character array variable `y` 
+y <- c("a", "b", "c", "d", "e", "f")
+
+# Define array variable `z` as a sequence 1, 2, 3, ..., 98, 99, 100
+z <- 1:100
+```
+
+
+```{r, eval=F}
+# Summarize arrays.
+bird_weights <- c(5.1, 4.7, 3.6, 4.2, 3.7, 6, 5.8, 6.1, 5.5, 3.8, 6.6, 4.3)
+
+sum(bird_weights)    # [1] 59.4
+mean(bird_weights)   # [1] 4.95
+median(bird_weights) # [1] 4.9
+min(bird_weights)    # [1] 3.6
+max(bird_weights)    # [1] 6.6
+sd(bird_weights)     # [1] 1.042288
+IQR(bird_weights)    # [1] 1.75
+
+# If there are NAs in the data, use argument `na.rm=TRUE` to ignore in calculations:
+bird_weights_missing <- c(5.1, 4.7, 3.6, NA)
+mean(bird_weights_missing)                # [1] NA    # womp :(
+mean(bird_weights_missing, na.rm=TRUE)    # [1] 4.466667  
+```
+
+### Data types in R
+
+<!--
++ Use the function `class()` to determine the type of a variable
++ Use the function `as.TYPE()` to coerce a variable to change type
+  + `TYPE` is one of `numeric`, `character()`, `logical()` or `factor()`
++ Use the function `factor(..., levels=c(), labels=c())` to change factor order or labels
+-->
+```{r, eval=FALSE}
+## Examples with numeric data variable
+x <- 10              # (no output - just defines x!)
+class(x)             # "numeric"
+as.character(x)      # "10" . Does NOT change value of x
+as.logical(x)        # TRUE . Does NOT change value of x
+x <- as.character(x) # Actually changes value of `x` to "10"
+```
+```{r, eval=FALSE}
+## Examples with character data variable
+a_fruit <- "apple"
+class(a_fruit)       # "character"
+as.numeric(a_fruit)  # NA (no way to convert "apple" to a number!)
+```
+```{r, eval=FALSE}
+## Examples with factor data variable
+several_fruits <- c("apple", "apple", "banana", "cherry", "papaya", "papaya", "papaya") 
+several_fruits <- as.factor(several_fruits) # Coerce into a factor
+class(several_fruits)   # "factor"
+levels(several_fruits)  # [1] "apple"  "banana" "cherry" "papaya"
+
+# Use function `factor()` to RE-ORDER the levels
+several_fruits2 <- factor(several_fruits,  
+                          levels = c("papaya", "apple", "cherry", "banana"))
+levels(several_fruits2)  # [1] "papaya" "apple"  "cherry" "banana"
+
+# re-order levels AND change the labels
+several_fruits3 <- factor(several_fruits,  
+                          levels = c("papaya", "apple", "cherry", "banana"),
+                          labels = c("Papaya", "Apple", "Cherry", "Banana"))
+levels(several_fruits3)  # [1] "Papaya" "Apple"  "Cherry" "Banana"
+
+```
+
+
+Data frames and functions  {data-orientation=columns}
+=====================================
+
+Column
+----------------------------------------------------------
+
+
+### Exploring data frames
+
+
+```{r}
+# View first 6 rows
+head(iris)
+# View first 2 rows
+head(iris, 2)
+# Extract a column as an array with the dollar sign $
+iris$Sepal.Length
+```
+
+
+```{r, eval=FALSE}
+# Ask how many rows, columns in the data frame
+nrow(iris)   # [1] 150
+ncol(iris)   # [1] 5
+```
+
+*Within the `RStudio` application, you can use `View(iris)`. This `View()` function does not work anywhere else!*
+
+Column
+----------------------------------------------------------
+
+### Miscellaneous functions
+
+
+```{r, eval=FALSE}
+# Useful functions for numbers
+x <- 100
+
+# Natural log by default. Second argument specifies base
+log(x)       # [1] 4.60517 
+log(x, 10)   # [1] 2
+
+# Square root
+sqrt(x)      # [1] 10
+
+# Absolute value (boring, so multiply by -1!)
+abs(x*-1)    # [1] 100
+```
+
+```{r, eval=FALSE}
+# Various ways to round
+x <- 100.679274
+round(x)       # [1] 101
+round(x, 2)    # [1] 100.68
+floor(x)       # [1] 100
+ceiling(x)     # [1] 101
+```
+
+
+```{r, eval=FALSE}
+# Number of elements in an array
+x <- c(0, 1, 1, 2, 3, 5, 8, 13)
+length(x)     # [1] 8
+```
+
+```{r, eval=FALSE}
+# Number of characters in a character variable
+x <- "pineapple"
+nchar(x)      # [1] 9
+```
+
+
+```{r, eval=FALSE}
+# Check for NA's in data
+x <- "pineapple"
+is.na(x)     # [1] FALSE
+
+x <- c(1, 4, NA, 10, 24, NA, 13)
+is.na(x)     # [1] FALSE FALSE TRUE FALSE FALSE TRUE FALSE
+```
+
+
+
+
+
+`dplyr`
+===================================== 
+
+
+
+`ggplot2`
+===================================== 
+
+
+`tidyr`
+===================================== 
+
+
+Miscellaneous `tidyverse`
+===================================== 
+
